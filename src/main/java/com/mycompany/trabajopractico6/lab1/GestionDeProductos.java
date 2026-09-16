@@ -25,10 +25,10 @@ public class GestionDeProductos extends javax.swing.JFrame {
     };
 
     public GestionDeProductos() {
-        
+
         initComponents();
         armarCabecera();
-        
+
         try {
             URL url = new URL("https://w7.pngwing.com/pngs/8/816/png-transparent-shopping-cart-shopping-cart-grocery-store-vehicle-shopping-bags-trolleys-thumbnail.png");
             ImageIcon icon = new ImageIcon(url);
@@ -41,9 +41,9 @@ public class GestionDeProductos extends javax.swing.JFrame {
             jButtonAgregar.setIcon(new ImageIcon(img));
 
         } catch (MalformedURLException e) {
-          System.out.println("La URL no es válida");
+            System.out.println("La URL no es válida");
         }
-        
+
         for (String categoria : categorias) {
             jComboBox1.addItem(categoria);
         }
@@ -228,8 +228,7 @@ public class GestionDeProductos extends javax.swing.JFrame {
 
             modelo.addRow(new Object[]{p.nombre, p.categoria, p.precio});
             vaciarCampos(jPanel1);
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(this, "Completa los campos.");
         }
 
@@ -237,12 +236,13 @@ public class GestionDeProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 
     private void jTextFieldPrecioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecioKeyReleased
-        String texto = String.valueOf(jTextFieldPrecio.getText().trim());
-
-        if (texto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Complete los campos.");
+        try {
+            double precioIngresado = Double.parseDouble(jTextFieldPrecio.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingrese solo numeros");
         }
     }//GEN-LAST:event_jTextFieldPrecioKeyReleased
+
 
     public boolean validarCamposVacios(JPanel jPanel) {
         for (Component c : jPanel.getComponents()) {
