@@ -167,6 +167,9 @@
             <Component class="javax.swing.JTextField" name="jTextFieldNombre">
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldPrecio">
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldPrecioKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="jComboBox1">
               <Properties>

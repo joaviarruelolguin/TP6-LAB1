@@ -1,8 +1,13 @@
 package com.mycompany.trabajopractico6.lab1;
 
 import java.awt.Component;
+import java.awt.Image;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -12,7 +17,6 @@ public class GestionDeProductos extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GestionDeProductos.class.getName());
     protected String[] categorias = {"Comestible", "Limpieza", "Farmacia", "Ropa", "Perfumeria"};
     private ArrayList<Producto> productos = new ArrayList<>();
-    
 
     private DefaultTableModel modelo = new DefaultTableModel() {
         public boolean isCellEditable(int fila, int col) {
@@ -21,10 +25,25 @@ public class GestionDeProductos extends javax.swing.JFrame {
     };
 
     public GestionDeProductos() {
-
+        
         initComponents();
         armarCabecera();
+        
+        try {
+            URL url = new URL("https://w7.pngwing.com/pngs/8/816/png-transparent-shopping-cart-shopping-cart-grocery-store-vehicle-shopping-bags-trolleys-thumbnail.png");
+            ImageIcon icon = new ImageIcon(url);
+            Image img = icon.getImage().getScaledInstance(
+                    25,
+                    25,
+                    Image.SCALE_SMOOTH
+            );
 
+            jButtonAgregar.setIcon(new ImageIcon(img));
+
+        } catch (MalformedURLException e) {
+          System.out.println("La URL no es válida");
+        }
+        
         for (String categoria : categorias) {
             jComboBox1.addItem(categoria);
         }
@@ -69,6 +88,12 @@ public class GestionDeProductos extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Precio ($)");
+
+        jTextFieldPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldPrecioKeyReleased(evt);
+            }
+        });
 
         jButtonAgregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButtonAgregar.setText("Agregar");
@@ -192,22 +217,54 @@ public class GestionDeProductos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
-        String categoria = (String) jComboBox1.getSelectedItem();
-        String nombre = jTextFieldNombre.getText();
-        double precio = Double.parseDouble(jTextFieldPrecio.getText());
-        
-        Producto p = new Producto(nombre, precio, categoria);
-        productos.add(p);
 
-        modelo.addRow(new Object[]{p.nombre, p.categoria, p.precio});
-        vaciarCampos(jPanel1);
+        if (!validarCamposVacios(jPanel1)) {
+            String categoria = (String) jComboBox1.getSelectedItem();
+            String nombre = jTextFieldNombre.getText();
+            double precio = Double.parseDouble(jTextFieldPrecio.getText());
+
+            Producto p = new Producto(nombre, precio, categoria);
+            productos.add(p);
+
+            modelo.addRow(new Object[]{p.nombre, p.categoria, p.precio});
+            vaciarCampos(jPanel1);
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Completa los campos.");
+        }
+
 
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 
-    public boolean validarCamposVacios(JPanel jPanel) {
-           return true;        
+    private void jTextFieldPrecioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecioKeyReleased
+        String texto = String.valueOf(jTextFieldPrecio.getText().trim());
+
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Complete los campos.");
         }
-    
+    }//GEN-LAST:event_jTextFieldPrecioKeyReleased
+
+    public boolean validarCamposVacios(JPanel jPanel) {
+        for (Component c : jPanel.getComponents()) {
+            if (c instanceof JTextField) {
+                JTextField caja = (JTextField) c;
+                if (caja.getText().trim().isEmpty()) {
+                    return true;
+                }
+            }
+        }
+
+        for (Component c : jPanel.getComponents()) {
+            if (c instanceof JComboBox) {
+                JComboBox combo = (JComboBox) c;
+                if (combo.getSelectedIndex() == -1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     public void vaciarCampos(JPanel jPanel) {
         JComboBox combo = null;
