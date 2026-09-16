@@ -1,12 +1,18 @@
 package com.mycompany.trabajopractico6.lab1;
 
+import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionDeProductos extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GestionDeProductos.class.getName());
     protected String[] categorias = {"Comestible", "Limpieza", "Farmacia", "Ropa", "Perfumeria"};
- 
+    private ArrayList<Producto> productos = new ArrayList<>();
+    
 
     private DefaultTableModel modelo = new DefaultTableModel() {
         public boolean isCellEditable(int fila, int col) {
@@ -22,8 +28,7 @@ public class GestionDeProductos extends javax.swing.JFrame {
         for (String categoria : categorias) {
             jComboBox1.addItem(categoria);
         }
-        
-       
+
     }
 
     private void armarCabecera() {
@@ -32,7 +37,6 @@ public class GestionDeProductos extends javax.swing.JFrame {
         modelo.addColumn("Precio");
         jTableProductos.setModel(modelo);
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -191,10 +195,40 @@ public class GestionDeProductos extends javax.swing.JFrame {
         String categoria = (String) jComboBox1.getSelectedItem();
         String nombre = jTextFieldNombre.getText();
         double precio = Double.parseDouble(jTextFieldPrecio.getText());
+        
+        Producto p = new Producto(nombre, precio, categoria);
+        productos.add(p);
 
-        modelo.addRow(new Object[] {nombre, categoria, precio});
-       
+        modelo.addRow(new Object[]{p.nombre, p.categoria, p.precio});
+        vaciarCampos(jPanel1);
+
     }//GEN-LAST:event_jButtonAgregarActionPerformed
+
+    public boolean validarCamposVacios(JPanel jPanel) {
+           return true;        
+        }
+    
+
+    public void vaciarCampos(JPanel jPanel) {
+        JComboBox combo = null;
+        for (Component c : jPanel.getComponents()) {
+            if (c instanceof JTextField) {
+                JTextField caja = (JTextField) c;
+                caja.setText("");
+            }
+        }
+        for (int i = 0; i < jPanel.getComponents().length; i++) {
+            if (jPanel.getComponents()[i] instanceof JTextField) {
+                JTextField caja = (JTextField) jPanel.getComponents()[i];
+                caja.setText("");
+            }
+            if (jPanel.getComponents()[i] instanceof JComboBox) {
+                combo = (JComboBox) jPanel.getComponents()[i];
+                combo.setSelectedIndex(-1);
+            }
+
+        }
+    }
 
     /**
      * @param args the command line arguments
